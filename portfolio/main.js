@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x121212);
 
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -24,7 +25,7 @@ renderer.render(scene, camera);
 
 const geometry = new THREE.TorusKnotGeometry(10, 3, 90, 16);
 const material = new THREE.MeshStandardMaterial({
-  color: 0xff6347,
+  color: 0x008296,
 });
 const torus = new THREE.Mesh(geometry, material);
 
@@ -51,16 +52,32 @@ function addStar() {
 
 Array(200).fill().forEach(addStar);
 
-const controls = new OrbitControls(camera, renderer.domElement);
+// const gridHelper = new THREE.GridHelper(200, 50);
+// scene.add(gridHelper);
+// const controls = new OrbitControls(camera, renderer.domElement);
+
+function moveCamera() {
+  // Get viewport dimensions
+  const top = document.body.getBoundingClientRect().top;
+
+  // Move camera
+  camera.position.x = top * -0.002;
+  camera.position.y = top * -0.002;
+  camera.position.z = top * -0.01;
+}
+
+// Move camera when page is scrolled
+document.body.onscroll = moveCamera;
+moveCamera();
 
 function animate() {
   requestAnimationFrame(animate);
 
   torus.rotation.x += 0.01;
   torus.rotation.y += 0.005;
-  torus.rotation.z += 0.0025;
+  torus.rotation.z += 0.003;
 
-  controls.update();
+  // controls.update();
 
   renderer.render(scene, camera);
 }
